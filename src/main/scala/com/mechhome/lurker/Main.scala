@@ -26,15 +26,16 @@ object Main {
     try {
       implicit val system = ActorSystem("Lurker")
       implicit val materializer = ActorMaterializer()
-      val portDefault = "/dev/tty.usbserial-A6025ZVA"
-      val motorDefault = "akka.tcp://Lurker@10.10.10.58:2552/user/motors"
 
       args(1) match {
         case "client" =>
-          val clientActor = system.actorOf(ClientActor(args(2) ?? motorDefault), name = "client")
+          val motor = args(2) ?? "akka.tcp://Lurker@10.10.10.58:2552/user/motors"
+          val clientActor = system.actorOf(ClientActor(motor), name = "client")
           clientActor ! ClientActor.ShowWindow
         case "driver" =>
-          val motorActor = system.actorOf(MotorActor(args(2) ?? portDefault), name = "motors")
+          val port = args(2) ?? "/dev/tty.usbserial-A6025ZVA"
+          val client = args(3) ?? "akka.tcp://Lurker@10.10.10.110:2552/user/client"
+          val motorActor = system.actorOf(MotorActor(port, client), name = "motors")
       }
 
       system.registerOnTermination(println("Stopped Lurker"))

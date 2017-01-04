@@ -18,15 +18,12 @@ import com.mechhome.lurker.ClientActor.SetLabel
 object MotorActor {
   case class Stop()
   case class ChannelRange(min: Int, max: Int)
-  def apply(port: String) = Props(classOf[MotorActor], port)
+  def apply(port: String, clientAddress: String) = Props(classOf[MotorActor], port, clientAddress)
 }
 
-class MotorActor(port: String) extends Actor with ActorLogging {
+class MotorActor(port: String, clientAddress: String) extends Actor with ActorLogging {
   import MotorActor._
   import context._
-
-  //val clientAddress = "akka://Lurker/user/client"
-  val clientAddress = "akka.tcp://Lurker@10.10.10.110:2552/user/client"
 
   val sp = SerialPort.getCommPort(port)
   val ranges = Map(1 -> new ChannelRange(1, 127), 2 -> new ChannelRange(255, 129))
