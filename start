@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
+
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+pushd ${DIR} > /dev/null
+
+LOG4J_CONFIG="${DIR}/conf/log4j.properties"
+JAR_FILE="${DIR}/build/libs/Lurker-1.1.jar"
+
+env
+echo "Starting Lurker..."
+
+java -Xms256m -Xmx256m -Dlog4j.configuration="file:///${LOG4J_CONFIG}" -jar ${JAR_FILE}
+popd > /dev/null
+
