@@ -11,6 +11,6 @@ JAR_FILE="${DIR}/build/libs/Lurker-1.1.jar"
 env
 echo "Starting Lurker..."
 
-java -Xms256m -Xmx256m -Dlog4j.configuration="file:///${LOG4J_CONFIG}" -jar ${JAR_FILE}
+java -Xms256m -Xmx256m -Dlog4j.configuration="file:///${LOG4J_CONFIG}" -jar ${JAR_FILE} $@
 popd > /dev/null
 

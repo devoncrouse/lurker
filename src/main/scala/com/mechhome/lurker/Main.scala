@@ -27,14 +27,14 @@ object Main {
       implicit val system = ActorSystem("Lurker")
       implicit val materializer = ActorMaterializer()
 
-      args(1) match {
+      args(0) match {
         case "client" =>
-          val motor = args(2) ?? "akka.tcp://Lurker@10.10.10.58:2552/user/motors"
+          val motor = if (args.length >= 2) args(1) else "akka.tcp://Lurker@10.10.10.58:2552/user/motors"
           val clientActor = system.actorOf(ClientActor(motor), name = "client")
           clientActor ! ClientActor.ShowWindow
         case "driver" =>
-          val port = args(2) ?? "/dev/tty.usbserial-A6025ZVA"
-          val client = args(3) ?? "akka.tcp://Lurker@10.10.10.110:2552/user/client"
+          val port = if (args.length >= 2) args(1) else "/dev/tty.usbserial-A6025ZVA"
+          val client = if (args.length >= 3) args(2) else "akka.tcp://Lurker@10.10.10.110:2552/user/client"
           val motorActor = system.actorOf(MotorActor(port, client), name = "motors")
       }
 
